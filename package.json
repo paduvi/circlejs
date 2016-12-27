@@ -1,0 +1,22 @@
+{
+  "name": "circlejs-framework",
+  "version": "1.0.0",
+  "description": "circlejs-framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "circlejs"
+  ],
+  "author": "paduvi",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "callsite": "^1.0.0",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "glob": "^7.1.1",
+    "path": "^0.12.7"
+  }
+}
