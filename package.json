@@ -1,6 +1,6 @@
 {
   "name": "circlejs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "circlejs-framework",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,7 @@
   "keywords": [
     "circlejs"
   ],
+  "repository": "https://github.com/paduvi/circlejs.git",
   "author": "paduvi",
   "license": "ISC",
   "dependencies": {
@@ -17,6 +18,7 @@
     "cors": "^2.8.1",
     "express": "^4.14.0",
     "glob": "^7.1.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "seneca": "^3.2.2"
   }
 }
