@@ -1,9 +1,6 @@
 /**
  * Created by chotoxautinh on 12/27/16.
  */
-/**
- * Created by chotoxautinh on 11/12/16.
- */
 var Promise = require('bluebird');
 var fs = require('fs');
 var path = require('path');
@@ -97,6 +94,9 @@ class Application {
             self.db = db;
             return self.loadModels();
         }).then(function () {
+            let database = require(`${__base}/config/database.js`);
+            return database.afterInitialize(self);
+        }).then(function () {
             return self.loadSeneca();
         }).then(function () {
             return self.loadWebController();
@@ -126,7 +126,8 @@ class Application {
     }
 
     connectDatabase() {
-        return require(`${__base}/config/database.js`)(this);
+        let database = require(`${__base}/config/database.js`);
+        return database.beforeInitialize(this);
     }
 
     loadModels() {
