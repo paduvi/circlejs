@@ -111,8 +111,8 @@ class Application {
 
             server.listen(self.setting.web.port, () => {
                 self.logger.info('Application loaded using the "' + process.env.NODE_ENV + '" environment configuration');
-            self.logger.info('Application started on port ' + self.setting.web.port, ', Process ID: ' + process.pid);
-        });
+                self.logger.info('Application started on port ' + self.setting.web.port, ', Process ID: ' + process.pid);
+            });
 
             return;
         }).catch(function (err) {
@@ -147,7 +147,8 @@ class Application {
 
     loadWebController() {
         var self = this;
-        let files = glob.sync(`${__base}/controller/web/*/route.js`);
+        const folder_name = self.setting.web.path || 'web';
+        let files = glob.sync(`${__base}/controller/${folder_name}/*/route.js`);
         return Promise.map(files, function (filePath) {
             let controllerName = path.dirname(filePath).split("/").pop();
             let content = require(filePath)(self);
