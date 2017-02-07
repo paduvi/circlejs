@@ -189,9 +189,9 @@ class Application {
                 middleware.unshift(passport.authenticate(authProp.name, Object.assign({}, authProp.options, {session: false})));
                 if (Array.isArray(authProp.permissions) && authProp.permissions.length > 0) {
                     middleware.splice(1, 0, function (req, res, next) {
-                        if (authProp.permissions.some((v) => req.user.permissions.indexOf(v) >= 0))
-                            return next();
-                        next('Do not have permissions');
+                        if (authProp.permissions.some((v) => req.user.permissions.indexOf(v) < 0))
+                            return next('Do not have permissions');
+                        next();
                     })
                 }
             }
