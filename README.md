@@ -1,12 +1,29 @@
 # CircleJS - Core Framework for Micro-service 
 
 ### Quy trình triển khai:
-1 - Cài đặt các gói thư viện:
+1 - Cài đặt (2 cách):
 
-Để tải các thư viện `node_modules`, ta sử dụng câu lệnh: `npm install`
+- Sử dụng bộ starter pack:
+```bash
+git clone https://github.com/paduvi/circle-starter-pack.git
+cd circle-starter-pack
+```
 
-2 - Chạy ở môi trường `Development`:
-`npm test`
+- Nhúng thư viện Circlejs:
+```bash
+npm install --save circlejs
+```
+Mẫu file bootstrap:
+```javascript
+// server.js
+
+var Application = require('circlejs');
+
+var app = new Application();
+app.start();
+```
+
+2 - Chạy ở môi trường `Development`: `npm test`
 
 3 - Chạy ở môi trường `Production`: `npm start`
 
