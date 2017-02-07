@@ -6,9 +6,9 @@
 Để tải các thư viện `node_modules`, ta sử dụng câu lệnh: `npm install`
 
 2 - Chạy ở môi trường `Development`:
-`npm test` hoặc `node server-dev.js`
+`npm test`
 
-3 - Chạy ở môi trường `Production`: `npm start` hoặc `node server.js`
+3 - Chạy ở môi trường `Production`: `npm start`
 
 ### Cấu trúc folder:
 - config: 
@@ -24,13 +24,14 @@
 
 ### Controller:
 
-Các route sẽ được khai báo bên trong các file `controller/{controllerName}/route.js`.
+Các route sẽ được khai báo bên trong các file `controller/{path}/{controllerName}/route.js`.
+Path được khai báo trong config.js, mặc định nếu không khai báo thì sẽ lấy giá trị là `'web'`
 Prefix URL được khai báo trong config.js, mặc định nếu không khai báo thì sẽ lấy giá trị là `''`
 
-Ví dụ route `controller/online-course/route.js` + prefix là `'/api'`:
+Ví dụ route `controller/web/item/route.js` + prefix là `'/api'`:
 
 ```
-        "/complete-video": {
+        "/test": {
             get: {
                 handler: (req, res) => res.sendStatus(200),
                 middleware: [], // optional
@@ -39,9 +40,9 @@ Ví dụ route `controller/online-course/route.js` + prefix là `'/api'`:
         }
 ```
 
--> Đường dẫn tương ứng: `/api/online-course/complete-video`
+-> Đường dẫn tương ứng: `/api/item/test`
 
--> Hàm trên sẽ tương ứng với lệnh `app.get('/api/online-course/complete-video', [], online.completeVideo)` trong express
+-> Hàm trên sẽ tương ứng với lệnh `app.get('/api/item/test', [], online.completeVideo)` trong express
 
 -> Danh sách các middleware mình khai báo ở trong phần `middleware` (optional)
 
