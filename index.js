@@ -187,7 +187,7 @@ class Application {
             const authProp = handlers.authenticate;
             if (authProp && self.setting.web.passport) {
                 middleware.unshift(passport.authenticate(authProp.name, authProp.options));
-                if (handlers.permissions) {
+                if (authProp.permissions) {
                     middleware.splice(1, 0, function (req, res, next) {
                         console.log(req.user);
                         next();
