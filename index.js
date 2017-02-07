@@ -187,7 +187,7 @@ class Application {
             const authProp = handlers.authenticate;
             if (authProp && self.setting.web.passport) {
                 middleware.unshift(passport.authenticate(authProp.name, Object.assign({}, authProp.options, {session: false})));
-                if (authProp.permissions) {
+                if (Array.isArray(authProp.permissions) && authProp.permissions.length > 0) {
                     middleware.splice(1, 0, function (req, res, next) {
                         if (authProp.permissions.some((v) => req.user.permissions.indexOf(v) >= 0))
                             return next();
