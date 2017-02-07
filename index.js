@@ -9,6 +9,7 @@ var http = require('http');
 var express = require('express');
 var cors = require('cors');
 var stack = require('callsite');
+var passport = require('passport');
 
 class Application {
     constructor() {
@@ -99,6 +100,8 @@ class Application {
         }).then(function () {
             return self.loadSeneca();
         }).then(function () {
+            return self.loadPassport();
+        }).then(function () {
             return self.loadWebController();
         }).then(function () {
             return self.handleError();
@@ -145,6 +148,19 @@ class Application {
         }
     }
 
+    loadPassport() {
+        var self = this;
+        if (self.setting.web.passport) {
+            self.use(passport.initialize());
+            let files = glob.sync(`${__base}/config/passport/*.js`);
+            return Promise.map(files, function (filePath) {
+                const strategyName = path.basename(filePath, '.js');
+                passport.use(strategyName, require(filePath));
+                return;
+            });
+        }
+    }
+
     loadWebController() {
         var self = this;
         const folder_name = self.setting.web.path || 'web';
@@ -161,12 +177,25 @@ class Application {
         });
     }
 
-    loadWebRoute(route, handlers) {
+    loadWebRoute(route, methods) {
         var self = this;
-        return Promise.map(Object.keys(handlers), function (method) {
-            let middleware = handlers[method].middleware || [];
-            let handler = handlers[method].handler;
-            let corsProp = handlers[method].cors;
+        return Promise.map(Object.keys(methods), function (method) {
+            const handlers = methods[method];
+            let middleware = handlers.middleware || [];
+            const handler = handlers.handler;
+
+            const authProp = handlers.authenticate;
+            if (authProp && self.setting.web.passport) {
+                middleware.unshift(passport.authenticate(authProp.name, authProp.options));
+                if (handlers.permissions) {
+                    middleware.splice(1, 0, function (req, res, next) {
+                        console.log(req.user);
+                        next();
+                    })
+                }
+            }
+
+            const corsProp = handlers.cors;
             if (corsProp && process.env.NODE_ENV != 'development') {
                 var corsOptions = {
                     origin: corsProp,
