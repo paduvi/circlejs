@@ -35,7 +35,12 @@ Ví dụ route `controller/web/item/route.js` + prefix là `'/api'`:
             get: {
                 handler: (req, res) => res.sendStatus(200),
                 middleware: [], // optional
-                cors: [] //optional
+                cors: [] //optional,
+                authenticate: {
+                    name: 'jwt',
+                    permissions: ['fashion_manage_all'],
+                    // options: {}
+                }
             }
         }
 ```
@@ -45,6 +50,8 @@ Ví dụ route `controller/web/item/route.js` + prefix là `'/api'`:
 -> Hàm trên sẽ tương ứng với lệnh `app.get('/api/item/test', [], online.completeVideo)` trong express
 
 -> Danh sách các middleware mình khai báo ở trong phần `middleware` (optional)
+
+-> Khai báo cấu hình authenticate khai báo ở trong phần `authenticate` (yêu cầu phải khai báo`passport:true` trong `config.js`):
 
 -> Danh sách địa chỉ web được phép truy cập AJAX vào service khai báo ở phần `cors` (optional, mặc định là tất cả các request đều được cho phép):
     
