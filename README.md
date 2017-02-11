@@ -41,7 +41,7 @@ app.start();
 
 ### Controller:
 
-Các route sẽ được khai báo bên trong các file `controller/{path}/{controllerName}/route.js`.
+Các route sẽ được khai báo bên trong các file `controller/{prefix}/{controllerName}/route.js`.
 Path được khai báo trong config.js, mặc định nếu không khai báo thì sẽ lấy giá trị là `'web'`
 Prefix URL được khai báo trong config.js, mặc định nếu không khai báo thì sẽ lấy giá trị là `''`
 
