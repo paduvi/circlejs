@@ -190,7 +190,7 @@ class Application {
                 if (Array.isArray(authProp.permissions) && authProp.permissions.length > 0) {
                     middleware.splice(1, 0, function (req, res, next) {
                         if (authProp.permissions.some((v) => req.user.permissions.indexOf(v) < 0))
-                            return next('Do not have permissions');
+                            return res.status(403).send('Do not have permissions');
                         next();
                     })
                 }
