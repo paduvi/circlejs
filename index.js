@@ -155,7 +155,7 @@ class Application {
             let files = glob.sync(`${__base}/config/passport/*.js`);
             return Promise.map(files, function (filePath) {
                 const strategyName = path.basename(filePath, '.js');
-                passport.use(strategyName, require(filePath));
+                passport.use(strategyName, require(filePath)(self));
                 return;
             });
         }
