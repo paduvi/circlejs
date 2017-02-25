@@ -86,7 +86,7 @@ Ví dụ dùng MongoDB:
 var MongoClient = require('mongodb').MongoClient;
 var Promise = require('bluebird');
 
-module.exports = function (app) {
+exports.beforeInitialize = function (app) {
     return new Promise(function (resolve, reject) {
         MongoClient.connect(`mongodb://${app.config.db.host}/${app.config.db.name}`, function (err, dbConnection) {
             if (err)
@@ -94,6 +94,11 @@ module.exports = function (app) {
             resolve({mongo: dbConnection});
         });
     })
+}
+
+/* Do something after loading models */
+exports.afterInitialize = (app) => {
+    return Promise.resolve();
 }
 ```
 -> Gọi tới db bằng lệnh `app.db.mongo`
@@ -105,7 +110,7 @@ var MongoClient = require('mongodb').MongoClient;
 var Sequelize = require('sequelize');
 var Promise = require('bluebird');
 
-module.exports = function (app) {
+exports.beforeInitialize = function (app) {
     return Promise.all([
         connectMongo(app),
         connectPostgres(app)
@@ -136,6 +141,11 @@ function connectPostgres(app) {
             return {sequelize};
         });
     })
+}
+
+/* Do something after loading models */
+exports.afterInitialize = (app) => {
+    return Promise.resolve();
 }
 ```
 -> Gọi tới Mongo bằng lệnh `app.db.mongo` và Postgres(Sequelize) bằng lệnh `app.db.sequelize`
