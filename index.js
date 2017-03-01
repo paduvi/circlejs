@@ -186,7 +186,24 @@ class Application {
 
             const authProp = handlers.authenticate;
             if (authProp && self.setting.web.passport) {
-                middleware.unshift(passport.authenticate(authProp.name, Object.assign({}, authProp.options, {session: false})));
+                middleware.unshift((req, res, next) => {
+                    passport.authenticate(authProp.name, Object.assign({session: false}, authProp.options),
+                        (err, user, info) => {
+                            if (err) {
+                                return next(err);
+                            }
+
+                            //authentication error
+                            if (!user) {
+                                return res.status(401).send(info.message || 'Unauthorized')
+                            }
+
+                            //success
+                            req.user = user;
+                            return next();
+
+                        })(req, res, next)
+                });
                 if (Array.isArray(authProp.permissions) && authProp.permissions.length > 0) {
                     middleware.splice(1, 0, function (req, res, next) {
                         if (authProp.permissions.some((v) => req.user.permissions.indexOf(v) < 0))
