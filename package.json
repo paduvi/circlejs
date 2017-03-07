@@ -1,6 +1,6 @@
 {
   "name": "circlejs",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "circlejs-framework",
   "main": "index.js",
   "scripts": {

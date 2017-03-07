@@ -30,8 +30,8 @@ class Application {
             plugin.apply(this, args);
         }.bind(this);
 
-        this.getGlobalConfig();
         this.getGlobalSetting();
+        this.getGlobalConfig();
         this.useLogger();
         this.useExpressSetting();
     }
@@ -57,18 +57,17 @@ class Application {
     }
 
     useLogger() {
-        let logger = require(`${__base}/config/logger.js`);
+        const logger = require(`${__base}/config/logger.js`);
         this.logger = logger;
     }
 
     useExpressSetting() {
-        let expressFunction = require(`${__base}/config/express.js`);
-        expressFunction(this);
+        require(`${__base}/config/express.js`)(this);
     }
 
     loadHelpers() {
         var self = this;
-        let files = glob.sync(`${__base}/utilities/helpers/*.js`)
+        const files = glob.sync(`${__base}/utilities/helpers/*.js`)
         let helpers = {};
         files.map(function (filePath) {
             let filename = path.basename(filePath, '.js');
@@ -97,6 +96,8 @@ class Application {
         }).then(function () {
             let database = require(`${__base}/config/database.js`);
             return database.afterInitialize(self);
+        }).then(function() {
+            return self.loadServices();
         }).then(function () {
             return self.loadSeneca();
         }).then(function () {
@@ -124,28 +125,39 @@ class Application {
     }
 
     handleError() {
-        var errorHandler = require(`${__base}/config/error.js`);
-        errorHandler(this);
+        require(`${__base}/config/error.js`)(this);
     }
 
     connectDatabase() {
-        let database = require(`${__base}/config/database.js`);
+        const database = require(`${__base}/config/database.js`);
         return database.beforeInitialize(this);
     }
 
     loadModels() {
         var self = this;
-        let dbList = Object.keys(this.db);
+        const dbList = Object.keys(this.db);
         if (dbList.length) {
             let files = glob.sync(`${__base}/model/+(${dbList.join("|")})/*.js`);
             return Promise.map(files, function (filePath) {
-                let dbName = path.dirname(filePath).split("/").pop();
-                let modelName = path.basename(filePath, '.js');
-                let content = require(filePath)(self.db[dbName]);
-                self.db[dbName].models[modelName] = content;
-                return;
+                const dbName = path.dirname(filePath).split("/").pop();
+                const modelName = path.basename(filePath, '.js');
+                return Promise.resolve(require(filePath)(self.db[dbName])).then(model=>{
+                    self.db[dbName].models[modelName] = model;
+                })
             });
         }
+    }
+
+    loadServices() {
+        var self = this;
+        self.services = {}
+        let files = glob.sync(`${__base}/service/*.js`);
+        return Promise.map(files, function (filePath) {
+            return Promise.resolve(require(filePath)(self)).then(service=>{
+                const serviceName = path.basename(filePath, '.js');
+                self.services[serviceName] = service;
+            })
+        });
     }
 
     loadPassport() {
@@ -164,7 +176,7 @@ class Application {
     loadWebController() {
         var self = this;
         const folder_name = self.setting.web.path || 'web';
-        let files = glob.sync(`${__base}/controller/${folder_name}/*/route.js`);
+        const files = glob.sync(`${__base}/controller/${folder_name}/*/route.js`);
         return Promise.map(files, function (filePath) {
             let controllerName = path.dirname(filePath).split("/").pop();
             let content = require(filePath)(self);
