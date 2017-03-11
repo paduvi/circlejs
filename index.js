@@ -226,7 +226,7 @@ class Application {
             }
 
             const corsProp = handlers.cors;
-            if (corsProp && process.env.NODE_ENV != 'development') {
+            if (corsProp) {
                 var corsOptions = {
                     origin: corsProp,
                     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
