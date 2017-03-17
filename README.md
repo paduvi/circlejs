@@ -194,8 +194,7 @@ module.exports = async(app) => {
 
 ```
 
-Để gọi ra service trên, ta dùng cú pháp:
-`app.services.mailer`
+Để gọi ra service trên, ta dùng cú pháp: `app.services.mailer`. Tên của service trùng với tên file javascript trong folder `service`.
 
 ### Action:
 
