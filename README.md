@@ -156,6 +156,47 @@ Ví dụ:
 - Model `User` của db có tên là `sequelize` sẽ nằm ở `model/sequelize/User.js`
 - Lệnh gọi ra: `app.db.sequelize.models.User`
 
+### Service:
+
+Các service sẽ được load ngay sau khi load xong Database, bên trong mỗi service trả về hàm có đầu vào là `app`, ví dụ:
+
+```ecmascript 6
+/* service/mailer.js */
+const nodemailer = require('nodemailer');
+
+module.exports = async(app) => {
+    const redis = app.db.redis;
+
+    const getConfig = async() => {
+        const json = await redis.getAsync('mailer');
+        return JSON.parse(json);
+    }
+
+    const setConfig = async(value) => {
+        return redis.setAsync('mailer', JSON.stringify(value));
+    }
+
+    const getInstance = async() => {
+        const config = await getConfig();
+        return nodemailer.createTransport(config);
+    }
+
+    const cachedConfig = await getConfig();
+    const staticConfig = app.setting.node_mailer;
+    await setConfig(Object.assign({}, staticConfig, cachedConfig));
+
+    return {
+        getConfig,
+        getInstance,
+        setConfig
+    }
+}
+
+```
+
+Để gọi ra service trên, ta dùng cú pháp:
+`app.services.mailer`
+
 ### Action:
 
 Phần Action được khai báo trong folder `action`. Được gọi ra thông qua câu lệnh `app.seneca.act` (cú pháp callback async) hoặc `app.seneca.exec` (cú pháp Promise).
