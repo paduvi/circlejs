@@ -96,7 +96,7 @@ class Application {
         }).then(function () {
             let database = require(`${__base}/config/database.js`);
             return database.afterInitialize(self);
-        }).then(function() {
+        }).then(function () {
             return self.loadServices();
         }).then(function () {
             return self.loadSeneca();
@@ -141,7 +141,7 @@ class Application {
             return Promise.map(files, function (filePath) {
                 const dbName = path.dirname(filePath).split("/").pop();
                 const modelName = path.basename(filePath, '.js');
-                return Promise.resolve(require(filePath)(self.db[dbName])).then(model=>{
+                return Promise.resolve(require(filePath)(self.db[dbName])).then(model => {
                     self.db[dbName].models[modelName] = model;
                 })
             });
@@ -153,7 +153,7 @@ class Application {
         self.services = {}
         let files = glob.sync(`${__base}/service/*.js`);
         return Promise.map(files, function (filePath) {
-            return Promise.resolve(require(filePath)(self)).then(service=>{
+            return Promise.resolve(require(filePath)(self)).then(service => {
                 const serviceName = path.basename(filePath, '.js');
                 self.services[serviceName] = service;
             })
@@ -208,8 +208,8 @@ class Application {
                             //authentication error
                             if (!user) {
                                 return res.status(401).format({
-                                    html: ()=> res.send(info.message || 'Unauthorized'),
-                                    json: ()=> res.send({
+                                    html: () => res.send(info.message || 'Unauthorized'),
+                                    json: () => res.send({
                                         message: info.message || 'Unauthorized'
                                     })
                                 })
@@ -225,8 +225,8 @@ class Application {
                     middleware.splice(1, 0, function (req, res, next) {
                         if (authProp.permissions.some((v) => req.user.permissions.indexOf(v) < 0))
                             return res.status(403).format({
-                                html: ()=> res.send('Do not have permissions'),
-                                json: ()=> res.send({
+                                html: () => res.send('Do not have permissions'),
+                                json: () => res.send({
                                     message: 'Do not have permissions'
                                 })
                             })
