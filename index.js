@@ -207,7 +207,12 @@ class Application {
 
                             //authentication error
                             if (!user) {
-                                return res.status(401).send(info.message || 'Unauthorized')
+                                return res.status(401).format({
+                                    html: ()=> res.send(info.message || 'Unauthorized'),
+                                    json: ()=> res.send({
+                                        message: info.message || 'Unauthorized'
+                                    })
+                                })
                             }
 
                             //success
@@ -219,7 +224,12 @@ class Application {
                 if (Array.isArray(authProp.permissions) && authProp.permissions.length > 0) {
                     middleware.splice(1, 0, function (req, res, next) {
                         if (authProp.permissions.some((v) => req.user.permissions.indexOf(v) < 0))
-                            return res.status(403).send('Do not have permissions');
+                            return res.status(403).format({
+                                html: ()=> res.send('Do not have permissions'),
+                                json: ()=> res.send({
+                                    message: 'Do not have permissions'
+                                })
+                            })
                         next();
                     })
                 }
