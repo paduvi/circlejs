@@ -254,7 +254,7 @@ class Application {
             strict: false,
             timeout: (self.setting.seneca ? self.setting.seneca.timeout : 2 * 60 * 1000) || 2 * 60 * 1000
         });
-        self.act = Promise.promisify(seneca.act, {context: self.seneca});
+        self.act = Promise.promisify(self.seneca.act, {context: self.seneca});
         self.seneca.exec = Promise.promisify(self.seneca.act);
         let files = glob.sync(`${__base}/action/*.js`);
         return Promise.map(files, function (filePath) {
