@@ -250,7 +250,10 @@ class Application {
 
     loadSeneca() {
         var self = this;
-        self.seneca = require('seneca')({strict: false, timeout: self.setting.seneca || 2 * 60 * 1000});
+        self.seneca = require('seneca')({
+            strict: false,
+            timeout: (self.setting.seneca ? self.setting.seneca.timeout : 2 * 60 * 1000) || 2 * 60 * 1000
+        });
         self.act = Promise.promisify(seneca.act, {context: self.seneca});
         self.seneca.exec = Promise.promisify(self.seneca.act);
         let files = glob.sync(`${__base}/action/*.js`);
